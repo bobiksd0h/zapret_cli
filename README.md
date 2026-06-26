@@ -1,9 +1,8 @@
 # zapret_cli
 
-Удобный терминальный интерфейс (TUI) для установки и управления **запретом** на Linux.
-Под капотом — движок [bol-van/zapret2](https://github.com/bol-van/zapret2) (nfqws2,
-Lua-десинхронизация); проект — порт [zapret.installer](https://github.com/Snowy-Fluffy/zapret.installer) / [zapret.cfgs](https://github.com/Snowy-Fluffy/zapret.cfgs) (которые были
-сделаны под первую версию запрета) на этот движок.
+Терминальный интерфейс (TUI) для установки и управления **запретом** на Linux.
+В основе лежит [bol-van/zapret2](https://github.com/bol-van/zapret2) (nfqws2,
+Lua-десинхронизация); проект — порт [zapret.installer](https://github.com/Snowy-Fluffy/zapret.installer) / [zapret.cfgs](https://github.com/Snowy-Fluffy/zapret.cfgs) (сделаны под первую версию запрета) на zapret2.
 
 ## Установка
 
@@ -16,7 +15,7 @@ sudo sh installer.sh
 Дальше меню вызывается командой:
 
 ```sh
-sudo zapret
+zapret
 ```
 
 Установщик ставит зависимости, скачивает движок в `/opt/zapret2`, применяет стратегию
@@ -41,6 +40,7 @@ cfgs/                стратегии, хостлисты, fake-пейлоад
 - прямое редактирование конфигов, кастомные стратегии/листы;
 - обновление движка с сохранением конфигурации и хостлистов;
 - удаление.
+- В планах есть покумекать над автоподбором/автосоставлением стратегий, хотя бы его подобием
 
 ## Стратегии
 
