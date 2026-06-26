@@ -1,0 +1,66 @@
+# zapret2 configuration (general_ALT2)
+# Auto-translated from zapret1 strategy 'general_ALT2' to nfqws2 (Lua desync) syntax.
+# See zapret2.cfgs/README.md for the v1->v2 option mapping.
+
+#TMPDIR=/opt/zapret2/tmp
+#WS_USER=nobody
+#FWTYPE=iptables
+#POSTNAT=0
+
+SET_MAXELEM=522288
+IPSET_OPT="hashsize 262144 maxelem $SET_MAXELEM"
+
+IP2NET_OPT4="--prefix-length=22-30 --v4-threshold=3/4"
+IP2NET_OPT6="--prefix-length=56-64 --v6-threshold=5"
+
+AUTOHOSTLIST_INCOMING_MAXSEQ=4096
+AUTOHOSTLIST_RETRANS_MAXSEQ=32768
+AUTOHOSTLIST_RETRANS_RESET=1
+AUTOHOSTLIST_RETRANS_THRESHOLD=3
+AUTOHOSTLIST_FAIL_THRESHOLD=3
+AUTOHOSTLIST_FAIL_TIME=60
+AUTOHOSTLIST_UDP_IN=1
+AUTOHOSTLIST_UDP_OUT=4
+AUTOHOSTLIST_DEBUGLOG=0
+
+MDIG_THREADS=30
+MDIG_EAGAIN=10
+MDIG_EAGAIN_DELAY=500
+
+GZIP_LISTS=1
+
+DESYNC_MARK=0x40000000
+DESYNC_MARK_POSTNAT=0x20000000
+
+NFQWS2_ENABLE=1
+NFQWS2_PORTS_TCP=80,443,2053,2083,2087,2096,8443,1024-65535
+NFQWS2_PORTS_UDP=443,19294-19344,50000-50100,1024-65535
+NFQWS2_TCP_PKT_OUT=12
+NFQWS2_TCP_PKT_IN=5
+NFQWS2_UDP_PKT_OUT=8
+NFQWS2_UDP_PKT_IN=4
+NFQWS2_OPT="
+--blob=quic_initial_www_google_com:@/opt/zapret2/files/fake/quic_initial_www_google_com.bin
+--blob=tls_clienthello_www_google_com:@/opt/zapret2/files/fake/tls_clienthello_www_google_com.bin
+--filter-udp=443 <HOSTLIST_NOAUTO> --payload=quic_initial --lua-desync=fake:blob=quic_initial_www_google_com:repeats=6 --new
+--filter-udp=19294-19344,50000-50100 --filter-l7=discord,stun --payload=discord_ip_discovery,stun --lua-desync=fake:blob=quic_initial_www_google_com:repeats=6 --new
+--filter-tcp=2053,2083,2087,2096,8443 --hostlist-domains=discord.media --hostlist-exclude=/opt/zapret2/ipset/zapret-hosts-user-exclude.txt --payload=http_req,tls_client_hello --lua-desync=multisplit:pos=2:seqovl=652:seqovl_pattern=tls_clienthello_www_google_com --new
+--filter-tcp=443 <HOSTLIST> --payload=tls_client_hello --lua-desync=multisplit:pos=2:seqovl=652:seqovl_pattern=tls_clienthello_www_google_com:ip_id=zero --new
+--filter-tcp=80,443 <HOSTLIST> --payload=http_req,tls_client_hello --lua-desync=multisplit:pos=2:seqovl=652:seqovl_pattern=tls_clienthello_www_google_com --new
+--filter-udp=443 --payload=quic_initial --lua-desync=fake:blob=quic_initial_www_google_com:repeats=6 --new
+--filter-tcp=80,443,1024-65535 --ipset=/opt/zapret2/ipset/ipset-game.txt --payload=http_req,tls_client_hello --lua-desync=multisplit:pos=2:seqovl=652:seqovl_pattern=tls_clienthello_www_google_com --new
+--filter-udp=1024-65535 --ipset=/opt/zapret2/ipset/ipset-game.txt --payload=all --out-range=-n2 --lua-desync=fake:blob=quic_initial_www_google_com:ip4_autottl=-2,3-20:repeats=12
+"
+
+MODE_FILTER=autohostlist
+
+FLOWOFFLOAD=donttouch
+
+INIT_APPLY_FW=1
+
+#DISABLE_IPV4=1
+DISABLE_IPV6=1
+
+FILTER_TTL_EXPIRED_ICMP=1
+
+#GETLIST=

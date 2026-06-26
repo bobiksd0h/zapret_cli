@@ -1,0 +1,89 @@
+# zapret2 configuration file
+# conf-custom - clean editable template based on zapret2 config.default.
+# this file is included from init scripts. change values here.
+# Strategy syntax is nfqws2 (Lua desync engine). See docs/manual.en.md in bol-van/zapret2.
+
+#TMPDIR=/opt/zapret2/tmp
+#WS_USER=nobody
+
+# override firewall type : iptables,nftables,ipfw
+#FWTYPE=iptables
+#POSTNAT=0
+
+# options for ipsets
+SET_MAXELEM=522288
+IPSET_OPT="hashsize 262144 maxelem $SET_MAXELEM"
+#IPSET_HOOK="/etc/zapret2.ipset.hook"
+
+# options for ip2net
+IP2NET_OPT4="--prefix-length=22-30 --v4-threshold=3/4"
+IP2NET_OPT6="--prefix-length=56-64 --v6-threshold=5"
+
+# options for auto hostlist
+AUTOHOSTLIST_INCOMING_MAXSEQ=4096
+AUTOHOSTLIST_RETRANS_MAXSEQ=32768
+AUTOHOSTLIST_RETRANS_RESET=1
+AUTOHOSTLIST_RETRANS_THRESHOLD=3
+AUTOHOSTLIST_FAIL_THRESHOLD=3
+AUTOHOSTLIST_FAIL_TIME=60
+AUTOHOSTLIST_UDP_IN=1
+AUTOHOSTLIST_UDP_OUT=4
+AUTOHOSTLIST_DEBUGLOG=0
+
+# number of parallel threads for domain list resolves
+MDIG_THREADS=30
+MDIG_EAGAIN=10
+MDIG_EAGAIN_DELAY=500
+
+GZIP_LISTS=1
+#LISTS_RELOAD="pfctl -f /etc/pf.conf"
+
+# mark bit used by nfqws to prevent loop
+DESYNC_MARK=0x40000000
+DESYNC_MARK_POSTNAT=0x20000000
+#FILTER_MARK=0x10000000
+
+NFQWS2_ENABLE=1
+# redirect outgoing traffic with connbytes limiter applied in both directions.
+NFQWS2_PORTS_TCP=80,443
+NFQWS2_PORTS_UDP=443
+# PKT_OUT means connbytes dir original, PKT_IN means connbytes dir reply
+NFQWS2_TCP_PKT_OUT=12
+NFQWS2_TCP_PKT_IN=5
+NFQWS2_UDP_PKT_OUT=8
+NFQWS2_UDP_PKT_IN=4
+#NFQWS2_PORTS_TCP_KEEPALIVE=80
+#NFQWS2_PORTS_UDP_KEEPALIVE=
+# use <HOSTLIST> and <HOSTLIST_NOAUTO> placeholders to engage standard hostlists and autohostlist in ipset dir
+NFQWS2_OPT="
+--filter-tcp=80 --filter-l7=http <HOSTLIST> --payload=http_req --lua-desync=fake:blob=fake_default_http:tcp_md5 --lua-desync=multisplit:pos=method+2 --new
+--filter-tcp=443 --filter-l7=tls <HOSTLIST> --payload=tls_client_hello --lua-desync=fake:blob=fake_default_tls:tcp_md5:tcp_seq=-10000 --lua-desync=multidisorder:pos=1,midsld --new
+--filter-udp=443 --filter-l7=quic <HOSTLIST_NOAUTO> --payload=quic_initial --lua-desync=fake:blob=fake_default_quic:repeats=6
+"
+
+# none,ipset,hostlist,autohostlist
+MODE_FILTER=none
+
+# donttouch,none,software,hardware
+FLOWOFFLOAD=donttouch
+
+#OPENWRT_LAN="lan lan2 lan3"
+#OPENWRT_WAN4="wan vpn"
+#OPENWRT_WAN6="wan6 vpn6"
+
+#IFACE_LAN=eth0
+#IFACE_WAN=eth1
+#IFACE_WAN6="ipsec0 wireguard0 he_net"
+
+INIT_APPLY_FW=1
+#INIT_FW_PRE_UP_HOOK="/etc/firewall.zapret2.hook.pre_up"
+#INIT_FW_POST_UP_HOOK="/etc/firewall.zapret2.hook.post_up"
+#INIT_FW_PRE_DOWN_HOOK="/etc/firewall.zapret2.hook.pre_down"
+#INIT_FW_POST_DOWN_HOOK="/etc/firewall.zapret2.hook.post_down"
+
+#DISABLE_IPV4=1
+DISABLE_IPV6=1
+
+FILTER_TTL_EXPIRED_ICMP=1
+
+#GETLIST=
