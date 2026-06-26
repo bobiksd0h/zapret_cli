@@ -2,7 +2,7 @@
 
 Удобный терминальный интерфейс (TUI) для установки и управления **запретом** на Linux.
 Под капотом — движок [bol-van/zapret2](https://github.com/bol-van/zapret2) (nfqws2,
-Lua-десинхронизация); проект — порт `zapret.installer` / `zapret.cfgs` (которые были
+Lua-десинхронизация); проект — порт [`zapret.installer`](https://github.com/Snowy-Fluffy/zapret.installer) / [`zapret.cfgs`](https://github.com/Snowy-Fluffy/zapret.cfgs) (которые были
 сделаны под первую версию запрета) на этот движок.
 
 ## Установка
